@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   html_document: 
     theme: spacelab
-    keep_md: true
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -85,22 +85,42 @@ table(homerange$trophic.guild)
 
 **7. Make two new data frames, one which is restricted to carnivores and another that is restricted to herbivores.**  
 ```{r}
-
+carnivores <- filter(homerange, trophic.guild=="carnivore")
+carnivores
+```
+```{r}
+herbivores <- filter(homerange, trophic.guild=="herbivore")
+herbivores
 ```
 
 **8. Do herbivores or carnivores have, on average, a larger `mean.hra.m2`? Remove any NAs from the data.**  
 ```{r}
-
+mean(carnivores$mean.hra.m2, na.rm=T)
 ```
 
 ```{r}
-
+mean(herbivores$mean.hra.m2, na.rm=T)
 ```
+Herbivores have a larger 'mean.hra.m2' on average.
 
 **9. Make a new dataframe `owls` that is limited to the mean mass, log10 mass, family, genus, and species of owls in the database. Which is the smallest owl? What is its common name? Do a little bit of searching online to see what you can learn about this species and provide a link below** 
 ```{r}
-
+owls_data <- filter(homerange, order=="strigiformes")
 ```
+
+```{r}
+owls <- select(owls_data, "common.name", "mean.mass.g", "log10.mass", "family", "genus", "species")
+owls
+```
+```{r}
+min(owls$mean.mass.g)
+```
+
+```{r}
+filter(owls, mean.mass.g==61.32)
+```
+[information on Eurasian pygmy owls](https://en.wikipedia.org/wiki/Eurasian_pygmy_owl)
+
 
 **10. As measured by the data, which bird species has the largest homerange? Show all of your work, please. Look this species up online and tell me about it!**.  
 ```{r}
