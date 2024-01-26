@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   html_document: 
     theme: spacelab
-    keep_md: yes
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -78,11 +78,6 @@ table(taxa$taxon)
 table(homerange$trophic.guild)
 ```
 
-##finish 1-6
-
-
-
-
 **7. Make two new data frames, one which is restricted to carnivores and another that is restricted to herbivores.**  
 ```{r}
 carnivores <- filter(homerange, trophic.guild=="carnivore")
@@ -104,28 +99,31 @@ mean(herbivores$mean.hra.m2, na.rm=T)
 Herbivores have a larger 'mean.hra.m2' on average.
 
 **9. Make a new dataframe `owls` that is limited to the mean mass, log10 mass, family, genus, and species of owls in the database. Which is the smallest owl? What is its common name? Do a little bit of searching online to see what you can learn about this species and provide a link below** 
-```{r}
-owls_data <- filter(homerange, order=="strigiformes")
-```
 
 ```{r}
-owls <- select(owls_data, "common.name", "mean.mass.g", "log10.mass", "family", "genus", "species")
-owls
+homerange %>% 
+  filter(order=="strigiformes") %>% 
+  select(common.name, mean.mass.g, log10.mass, family, genus, species) %>% 
+  arrange(mean.mass.g)
 ```
-```{r}
-min(owls$mean.mass.g)
-```
-
-```{r}
-filter(owls, mean.mass.g==61.32)
-```
-[information on Eurasian pygmy owls](https://en.wikipedia.org/wiki/Eurasian_pygmy_owl)
+[Information on Eurasian pygmy owls](https://animaldiversity.org/accounts/Glaucidium_passerinum/)
 
 
 **10. As measured by the data, which bird species has the largest homerange? Show all of your work, please. Look this species up online and tell me about it!**.  
-```{r}
 
+```{r}
+names(homerange)
 ```
+
+```{r}
+homerange %>% 
+  filter(class=="aves") %>% 
+  select(common.name, class, genus, species, mean.hra.m2) %>% 
+  arrange(desc(mean.hra.m2))
+```
+[Information on caracara cheriway](https://animaldiversity.org/accounts/Caracara_cheriway/)
+This species is called caracara cheriway (also known as crested caracaras). Their main geographic range spans from the Southern United states down to Panama, with isolated populations found in some other places. They have a wingspan of around 1.2 meters, and are 53 to 58 centimeters long. Interestingly, both sexes have similar plumage. They mate for life. If you want to read more information, you can click the link above!
+
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.   

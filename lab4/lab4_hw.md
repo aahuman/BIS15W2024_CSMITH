@@ -5,7 +5,7 @@ date: "2024-01-25"
 output:
   html_document: 
     theme: spacelab
-    keep_md: yes
+    keep_md: true
 ---
 
 
@@ -241,11 +241,6 @@ table(homerange$trophic.guild)
 ##       342       227
 ```
 
-##finish 1-6
-
-
-
-
 **7. Make two new data frames, one which is restricted to carnivores and another that is restricted to herbivores.**  
 
 ```r
@@ -324,54 +319,79 @@ Herbivores have a larger 'mean.hra.m2' on average.
 
 **9. Make a new dataframe `owls` that is limited to the mean mass, log10 mass, family, genus, and species of owls in the database. Which is the smallest owl? What is its common name? Do a little bit of searching online to see what you can learn about this species and provide a link below** 
 
-```r
-owls_data <- filter(homerange, order=="strigiformes")
-```
-
 
 ```r
-owls <- select(owls_data, "common.name", "mean.mass.g", "log10.mass", "family", "genus", "species")
-owls
+homerange %>% 
+  filter(order=="strigiformes") %>% 
+  select(common.name, mean.mass.g, log10.mass, family, genus, species) %>% 
+  arrange(mean.mass.g)
 ```
 
 ```
 ## # A tibble: 9 × 6
 ##   common.name        mean.mass.g log10.mass family    genus      species    
 ##   <chr>                    <dbl>      <dbl> <chr>     <chr>      <chr>      
-## 1 boreal owl               119         2.08 strigidae aegolius   funereus   
-## 2 long-eared owl           252         2.40 strigidae asio       otus       
+## 1 Eurasian pygmy owl        61.3       1.79 strigidae glaucidium passerinum 
+## 2 boreal owl               119         2.08 strigidae aegolius   funereus   
 ## 3 little owl               156.        2.19 strigidae athene     noctua     
-## 4 Eurasian eagle-owl      2191         3.34 strigidae bubo       bubo       
-## 5 great horned owl        1510         3.18 strigidae bubo       virginianus
-## 6 Eurasian pygmy owl        61.3       1.79 strigidae glaucidium passerinum 
-## 7 snowy owl               1920         3.28 strigidae nyctea     scandiaca  
-## 8 tawny owl                519         2.72 strigidae strix      aluco      
-## 9 barn owl                 285         2.45 tytonidae tyto       alba
+## 4 long-eared owl           252         2.40 strigidae asio       otus       
+## 5 barn owl                 285         2.45 tytonidae tyto       alba       
+## 6 tawny owl                519         2.72 strigidae strix      aluco      
+## 7 great horned owl        1510         3.18 strigidae bubo       virginianus
+## 8 snowy owl               1920         3.28 strigidae nyctea     scandiaca  
+## 9 Eurasian eagle-owl      2191         3.34 strigidae bubo       bubo
 ```
-
-```r
-min(owls$mean.mass.g)
-```
-
-```
-## [1] 61.32
-```
-
-
-```r
-filter(owls, mean.mass.g==61.32)
-```
-
-```
-## # A tibble: 1 × 6
-##   common.name        mean.mass.g log10.mass family    genus      species   
-##   <chr>                    <dbl>      <dbl> <chr>     <chr>      <chr>     
-## 1 Eurasian pygmy owl        61.3       1.79 strigidae glaucidium passerinum
-```
-[information on Eurasian pygmy owls](https://en.wikipedia.org/wiki/Eurasian_pygmy_owl)
+[Information on Eurasian pygmy owls](https://animaldiversity.org/accounts/Glaucidium_passerinum/)
 
 
 **10. As measured by the data, which bird species has the largest homerange? Show all of your work, please. Look this species up online and tell me about it!**.  
+
+
+```r
+names(homerange)
+```
+
+```
+##  [1] "taxon"                      "common.name"               
+##  [3] "class"                      "order"                     
+##  [5] "family"                     "genus"                     
+##  [7] "species"                    "primarymethod"             
+##  [9] "N"                          "mean.mass.g"               
+## [11] "log10.mass"                 "alternative.mass.reference"
+## [13] "mean.hra.m2"                "log10.hra"                 
+## [15] "hra.reference"              "realm"                     
+## [17] "thermoregulation"           "locomotion"                
+## [19] "trophic.guild"              "dimension"                 
+## [21] "preymass"                   "log10.preymass"            
+## [23] "PPMR"                       "prey.size.reference"
+```
+
+
+```r
+homerange %>% 
+  filter(class=="aves") %>% 
+  select(common.name, class, genus, species, mean.hra.m2) %>% 
+  arrange(desc(mean.hra.m2))
+```
+
+```
+## # A tibble: 140 × 5
+##    common.name            class genus        species      mean.hra.m2
+##    <chr>                  <chr> <chr>        <chr>              <dbl>
+##  1 caracara               aves  caracara     cheriway       241000000
+##  2 Montagu's harrier      aves  circus       pygargus       200980000
+##  3 peregrine falcon       aves  falco        peregrinus     153860000
+##  4 booted eagle           aves  hieraaetus   pennatus       117300000
+##  5 ostrich                aves  struthio     camelus         84300000
+##  6 short-toed snake eagle aves  circaetus    gallicus        78500000
+##  7 European turtle dove   aves  streptopelia turtur          63585000
+##  8 Egyptian vulture       aves  neophron     percnopterus    63570000
+##  9 common buzzard         aves  buteo        buteo           50240000
+## 10 lanner falcon          aves  falco        biarmicus       50000000
+## # ℹ 130 more rows
+```
+[Information on caracara cheriway](https://animaldiversity.org/accounts/Caracara_cheriway/)
+This species is called caracara cheriway (also known as crested caracaras). Their main geographic range spans from the Southern United states down to Panama, with isolated populations found in some other places. They have a wingspan of around 1.2 meters, and are 53 to 58 centimeters long. Interestingly, both sexes have similar plumage. They mate for life. If you want to read more information, you can click the link above!
 
 
 ## Push your final code to GitHub!
