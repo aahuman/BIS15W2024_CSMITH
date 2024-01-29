@@ -1,7 +1,7 @@
 ---
 title: "Lab 4 Homework"
 author: "Please Add Your Name Here"
-date: "2024-01-25"
+date: "2024-01-28"
 output:
   html_document: 
     theme: spacelab
@@ -321,10 +321,11 @@ Herbivores have a larger 'mean.hra.m2' on average.
 
 
 ```r
-homerange %>% 
+owls <- homerange %>% 
   filter(order=="strigiformes") %>% 
   select(common.name, mean.mass.g, log10.mass, family, genus, species) %>% 
   arrange(mean.mass.g)
+owls
 ```
 
 ```
@@ -341,6 +342,19 @@ homerange %>%
 ## 8 snowy owl               1920         3.28 strigidae nyctea     scandiaca  
 ## 9 Eurasian eagle-owl      2191         3.34 strigidae bubo       bubo
 ```
+
+```r
+head(owls, 1)
+```
+
+```
+## # A tibble: 1 × 6
+##   common.name        mean.mass.g log10.mass family    genus      species   
+##   <chr>                    <dbl>      <dbl> <chr>     <chr>      <chr>     
+## 1 Eurasian pygmy owl        61.3       1.79 strigidae glaucidium passerinum
+```
+
+
 [Information on Eurasian pygmy owls](https://animaldiversity.org/accounts/Glaucidium_passerinum/)
 
 

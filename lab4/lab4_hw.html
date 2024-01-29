@@ -11,7 +11,7 @@
 
 <meta name="author" content="Please Add Your Name Here" />
 
-<meta name="date" content="2024-01-25" />
+<meta name="date" content="2024-01-28" />
 
 <title>Lab 4 Homework</title>
 
@@ -376,7 +376,7 @@ display: none;
 
 <h1 class="title toc-ignore">Lab 4 Homework</h1>
 <h4 class="author">Please Add Your Name Here</h4>
-<h4 class="date">2024-01-25</h4>
+<h4 class="date">2024-01-28</h4>
 
 </div>
 
@@ -614,10 +614,11 @@ the mean mass, log10 mass, family, genus, and species of owls in the
 database. Which is the smallest owl? What is its common name? Do a
 little bit of searching online to see what you can learn about this
 species and provide a link below</strong></p>
-<pre class="r"><code>homerange %&gt;% 
+<pre class="r"><code>owls &lt;- homerange %&gt;% 
   filter(order==&quot;strigiformes&quot;) %&gt;% 
   select(common.name, mean.mass.g, log10.mass, family, genus, species) %&gt;% 
-  arrange(mean.mass.g)</code></pre>
+  arrange(mean.mass.g)
+owls</code></pre>
 <pre><code>## # A tibble: 9 × 6
 ##   common.name        mean.mass.g log10.mass family    genus      species    
 ##   &lt;chr&gt;                    &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;      
@@ -630,6 +631,11 @@ species and provide a link below</strong></p>
 ## 7 great horned owl        1510         3.18 strigidae bubo       virginianus
 ## 8 snowy owl               1920         3.28 strigidae nyctea     scandiaca  
 ## 9 Eurasian eagle-owl      2191         3.34 strigidae bubo       bubo</code></pre>
+<pre class="r"><code>head(owls, 1)</code></pre>
+<pre><code>## # A tibble: 1 × 6
+##   common.name        mean.mass.g log10.mass family    genus      species   
+##   &lt;chr&gt;                    &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;     
+## 1 Eurasian pygmy owl        61.3       1.79 strigidae glaucidium passerinum</code></pre>
 <p><a href="https://animaldiversity.org/accounts/Glaucidium_passerinum/">Information
 on Eurasian pygmy owls</a></p>
 <p><strong>10. As measured by the data, which bird species has the
