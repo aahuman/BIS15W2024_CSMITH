@@ -17,6 +17,11 @@ output:
 For the second part of lab today, we are going to spend time practicing the dplyr functions we have learned and add a few new ones. This lab doubles as your homework. Please complete the lab and push your final code to GitHub.  
 
 ## Load the libraries
+
+```{r}
+#install.packages("janitor")
+```
+
 ```{r}
 library("tidyverse")
 library("janitor")
@@ -134,20 +139,51 @@ superhero_info %>%
 
 ```{r}
 superhero_info %>% 
-  mutate(height_weight_ratio=)
+  mutate(height_weight_ratio=height/weight)
 ```
 
 12. Who has the highest height to weight ratio?  
 
+```{r}
+superhero_info %>% 
+  mutate(height_weight_ratio=height/weight) %>% 
+  select(name, height_weight_ratio) %>% 
+arrange(desc(height_weight_ratio))
+```
+##Groot has the heighest height-to-weight ratio.
+
 ## `superhero_powers`
 Have a quick look at the `superhero_powers` data frame.  
 
+```{r}
+superhero_powers <- clean_names(superhero_powers)
+```
 13. How many superheros have a combination of agility, stealth, super_strength, stamina?
+
+```{r}
+superhero_powers %>%
+  select(hero_names, agility, stealth, super_strength, stamina) %>%
+  filter(agility=="TRUE", stealth=="TRUE", super_strength=="TRUE", stamina=="TRUE")
+```
+
 
 ## Your Favorite
 14. Pick your favorite superhero and let's see their powers!  
 
+```{r}
+favorite_hero <- superhero_powers %>% 
+  filter(hero_names=="One Punch Man")
+favorite_hero
+```
+
+
 15. Can you find your hero in the superhero_info data? Show their info!  
+
+```{r}
+superhero_info %>% 
+  filter(name=="One Punch Man")
+```
+
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.  
