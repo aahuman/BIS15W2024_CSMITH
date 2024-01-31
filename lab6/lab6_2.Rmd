@@ -2,10 +2,11 @@
 title: "dplyr Superhero"
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  html_document: 
     theme: spacelab
-    toc: yes
-    toc_float: yes
+    toc: true
+    toc_float: true
+    keep_md: true
 ---
 
 ## Learning Goals  
@@ -172,7 +173,8 @@ superhero_powers %>%
 
 ```{r}
 favorite_hero <- superhero_powers %>% 
-  filter(hero_names=="One Punch Man")
+  filter(hero_names=="One Punch Man") %>% 
+   select_if(.==TRUE)
 favorite_hero
 ```
 
@@ -183,7 +185,6 @@ favorite_hero
 superhero_info %>% 
   filter(name=="One Punch Man")
 ```
-
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.  
