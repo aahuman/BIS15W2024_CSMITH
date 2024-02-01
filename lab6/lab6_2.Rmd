@@ -174,7 +174,7 @@ superhero_powers %>%
 ```{r}
 favorite_hero <- superhero_powers %>% 
   filter(hero_names=="One Punch Man") %>% 
-   select_if(.==TRUE)
+   select_if(.==TRUE | .=="One Punch Man")
 favorite_hero
 ```
 
