@@ -11,7 +11,7 @@
 
 <meta name="author" content="Your Name Here" />
 
-<meta name="date" content="2024-02-03" />
+<meta name="date" content="2024-02-04" />
 
 <title>Lab 7 Homework</title>
 
@@ -376,7 +376,7 @@ display: none;
 
 <h1 class="title toc-ignore">Lab 7 Homework</h1>
 <h4 class="author">Your Name Here</h4>
-<h4 class="date">2024-02-03</h4>
+<h4 class="date">2024-02-04</h4>
 
 </div>
 
@@ -876,32 +876,27 @@ between the years 1990-2000?</li>
 2008-2012?</li>
 </ol>
 <pre class="r"><code>fisheries_tidy %&gt;% 
-  filter(between(year, 2008, 2012) &amp; asfis_species_name==&quot;Cephalopoda&quot;) %&gt;% 
+  filter(between(year, 2008, 2012) &amp; isscaap_taxonomic_group==&quot;Squids, cuttlefishes, octopuses&quot;) %&gt;% 
   group_by(country) %&gt;% 
   summarize(cephalopods_caught=sum(catch, na.rm=T),
             n=n()) %&gt;% 
   arrange(desc(cephalopods_caught))</code></pre>
-<pre><code>## # A tibble: 16 × 3
+<pre><code>## # A tibble: 122 × 3
 ##    country                  cephalopods_caught     n
 ##    &lt;fct&gt;                                 &lt;dbl&gt; &lt;int&gt;
-##  1 India                                   570    10
-##  2 China                                   257     5
-##  3 Spain                                   198    10
-##  4 Algeria                                 162     5
-##  5 France                                  101     7
-##  6 Mauritania                               90     5
-##  7 TimorLeste                               76     5
-##  8 Italy                                    66     1
-##  9 Mozambique                               16     5
-## 10 Cambodia                                 15     5
-## 11 Taiwan Province of China                 13     3
-## 12 Madagascar                               11     5
-## 13 Croatia                                   7     3
-## 14 Israel                                    0     1
-## 15 Somalia                                   0     5
-## 16 Viet Nam                                  0     5</code></pre>
-<p>India, China, Spain, Algeria, and France caught the most cephalopods
-between 2008 and 2012.</p>
+##  1 China                                  8349    38
+##  2 Korea, Republic of                     3480    85
+##  3 Peru                                   3422    15
+##  4 Japan                                  3248    35
+##  5 Chile                                  2775    15
+##  6 United States of America               2417    56
+##  7 Indonesia                              1622    30
+##  8 Taiwan Province of China               1394    26
+##  9 Spain                                  1147   116
+## 10 France                                 1138    59
+## # ℹ 112 more rows</code></pre>
+<p>China, South Korea, Peru, Japan, and Chile caught the most
+cephalopods between 2008 and 2012.</p>
 <ol start="9" style="list-style-type: decimal">
 <li>Which species had the highest catch total between 2008-2012? (hint:
 Osteichthyes is not a species)</li>

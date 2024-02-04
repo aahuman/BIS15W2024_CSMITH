@@ -119,13 +119,13 @@ fisheries_tidy %>%
 8. Which five countries caught the most cephalopods between 2008-2012?
 ```{r}
 fisheries_tidy %>% 
-  filter(between(year, 2008, 2012) & asfis_species_name=="Cephalopoda") %>% 
+  filter(between(year, 2008, 2012) & isscaap_taxonomic_group=="Squids, cuttlefishes, octopuses") %>% 
   group_by(country) %>% 
   summarize(cephalopods_caught=sum(catch, na.rm=T),
             n=n()) %>% 
   arrange(desc(cephalopods_caught))
 ```
-India, China, Spain, Algeria, and France caught the most cephalopods between 2008 and 2012. 
+China, South Korea, Peru, Japan, and Chile caught the most cephalopods between 2008 and 2012. 
 
 9. Which species had the highest catch total between 2008-2012? (hint: Osteichthyes is not a species)
 
