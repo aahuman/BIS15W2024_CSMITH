@@ -29,27 +29,68 @@ library(janitor)
 Wikipedia's definition of [data science](https://en.wikipedia.org/wiki/Data_science): "Data science is an interdisciplinary field that uses scientific methods, processes, algorithms and systems to extract knowledge and insights from noisy, structured and unstructured data, and apply knowledge and actionable insights from data across a broad range of application domains."  
 
 1. (2 points) Consider the definition of data science above. Although we are only part-way through the quarter, what specific elements of data science do you feel we have practiced? Provide at least one specific example.  
+So far, I feel that we have focused particularly on using processes in R to extract knowledge from data, usually in the form of organized data sets. One example would be on the last homework we did, using various functions to extract useful information from the fishery data collected by the UN.
 
 2. (2 points) What is the most helpful or interesting thing you have learned so far in BIS 15L? What is something that you think needs more work or practice?  
+So far, the most helpful thing that I have learned is how to use logic to program. I don't have a lot of experience programming, but it is something that I have wanted to learn for a long time, and something that is very helpful in today's world. In terms of what needs more practice, I think I still need to get used to the specificity of programming. Minor syntax errors being the difference between code working and not working is quite frustrating, and I'm still not fully used to it.
 
 In the midterm 1 folder there is a second folder called `data`. Inside the `data` folder, there is a .csv file called `ElephantsMF`. These data are from Phyllis Lee, Stirling University, and are related to Lee, P., et al. (2013), "Enduring consequences of early experiences: 40-year effects on survival and success among African elephants (Loxodonta africana)," Biology Letters, 9: 20130011. [kaggle](https://www.kaggle.com/mostafaelseidy/elephantsmf).  
 
 3. (2 points) Please load these data as a new object called `elephants`. Use the function(s) of your choice to get an idea of the structure of the data. Be sure to show the class of each variable.
 
+```{r}
+elephants <- read_csv("data/ElephantsMF.csv")
+```
+```{r}
+summary(elephants)
+```
+```{r}
+dim(elephants)
+```
 
 4. (2 points) Change the names of the variables to lower case and change the class of the variable `sex` to a factor.
+
+```{r}
+elephants <- clean_names(elephants)
+```
+
+```{r}
+elephants$sex <- as.factor(elephants$sex)
+```
 
 
 5. (2 points) How many male and female elephants are represented in the data?
 
+```{r}
+table(elephants$sex)
+```
 
-6. (2 points) What is the average age all elephants in the data?
+6. (2 points) What is the average age of all elephants in the data?
 
+```{r}
+mean(elephants$age, na.rm = T)
+```
 
 7. (2 points) How does the average age and height of elephants compare by sex?
 
+```{r}
+elephants %>% 
+  group_by(sex) %>% 
+  summarize(across(c(age, height), mean, na.rm=T))
+```
+
 
 8. (2 points) How does the average height of elephants compare by sex for individuals over 20 years old. Include the min and max height as well as the number of individuals in the sample as part of your analysis.  
+
+```{r}
+elephants %>% 
+  filter(age>20) %>% 
+  group_by(sex) %>% 
+  summarize(across(c(age, height), mean, na.rm=T), 
+            min_height=min(height),
+            max_height=max(height),
+            number_individuals=n())
+```
 
 
 For the next series of questions, we will use data from a study on vertebrate community composition and impacts from defaunation in [Gabon, Africa](https://en.wikipedia.org/wiki/Gabon). One thing to notice is that the data include 24 separate transects. Each transect represents a path through different forest management areas.  
@@ -58,11 +99,56 @@ Reference: Koerner SE, Poulsen JR, Blanchard EJ, Okouyi J, Clark CJ. Vertebrate 
 
 9. (2 points) Load `IvindoData_DryadVersion.csv` and use the function(s) of your choice to get an idea of the overall structure. Change the variables `HuntCat` and `LandUse` to factors.
 
+```{r}
+transects <- read_csv("data/IvindoData_DryadVersion.csv")
+```
+```{r}
+summary(transects)
+```
+
+```{r}
+dim(transects)
+```
+```{r}
+transects <- clean_names(transects)
+```
+
+```{r}
+transects$hunt_cat <- as.factor(transects$hunt_cat)
+transects$land_use <- as.factor(transects$land_use)
+```
+
 
 10. (4 points) For the transects with high and moderate hunting intensity, how does the average diversity of birds and mammals compare?
 
+```{r}
+transects %>% 
+  filter(hunt_cat=="High" | hunt_cat=="Moderate") %>% 
+  group_by(hunt_cat) %>% 
+  summarize(across(c(diversity_bird_species, diversity_mammal_species), mean, na.rm=T))
+```
 
 11. (4 points) One of the conclusions in the study is that the relative abundance of animals drops off the closer you get to a village. Let's try to reconstruct this (without the statistics). How does the relative abundance (RA) of apes, birds, elephants, monkeys, rodents, and ungulates compare between sites that are less than 3km from a village to sites that are greater than 25km from a village? The variable `Distance` measures the distance of the transect from the nearest village. Hint: try using the `across` operator.  
 
+```{r}
+transects %>% 
+  filter(distance<3) %>% 
+  summarize(across(starts_with("ra"), mean, na.rm=T))
+```
+```{r}
+transects %>% 
+  filter(distance>25) %>% 
+  summarize(across(starts_with("ra"), mean, na.rm=T))
+```
 
 12. (4 points) Based on your interest, do one exploratory analysis on the `gabon` data of your choice. This analysis needs to include a minimum of two functions in `dplyr.`
+
+I chose to compare the vegetation levels in different transects by whether they are logged or not.
+
+```{r}
+transects %>% 
+  filter(land_use=="Logging" | land_use=="Park") %>% 
+  group_by(land_use) %>% 
+  summarize(across(contains("veg"), mean, na.rm=T))
+```
+
