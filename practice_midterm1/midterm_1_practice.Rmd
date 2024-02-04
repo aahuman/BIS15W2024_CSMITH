@@ -86,10 +86,10 @@ elephants %>%
 elephants %>% 
   filter(age>20) %>% 
   group_by(sex) %>% 
-  summarize(across(c(age, height), mean, na.rm=T), 
+  summarize(mean_height=mean(height), 
             min_height=min(height),
             max_height=max(height),
-            number_individuals=n())
+            number_elephants=n())
 ```
 
 
