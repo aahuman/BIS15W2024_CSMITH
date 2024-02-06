@@ -1,0 +1,22 @@
+---
+title: "midterm_1_cheatsheet.rmd"
+author: "Clive Smith"
+date: "2024-02-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+list of useful functions for midterm 1.
+
+filter()
+used to look through observations and pull out or exclude values that match a certain condition. Observations must meet both conditions when "&" and "," operators are used, they must only meet one condition when "|" operator is used.
+examples:
+filter(data_frame, variable=="NAME")
+filter(data_frame, variable==number), can also use >, <, >=, <=.
+filter(data_frame, variable1=="NAME" | variable2>=number)
+
+select()
+used to pull out variables that meet a certain condition. 
