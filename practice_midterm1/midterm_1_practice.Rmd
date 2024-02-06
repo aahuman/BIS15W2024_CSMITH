@@ -117,7 +117,7 @@ transects <- clean_names(transects)
 transects$hunt_cat <- as.factor(transects$hunt_cat)
 transects$land_use <- as.factor(transects$land_use)
 ```
-
+w
 
 10. (4 points) For the transects with high and moderate hunting intensity, how does the average diversity of birds and mammals compare?
 
