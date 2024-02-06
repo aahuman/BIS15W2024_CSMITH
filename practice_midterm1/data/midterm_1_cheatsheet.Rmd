@@ -5,10 +5,6 @@ date: "2024-02-04"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 list of useful functions for midterm 1.
 
 filter()
@@ -20,3 +16,129 @@ filter(data_frame, variable1=="NAME" | variable2>=number)
 
 select()
 used to pull out variables that meet a certain condition. 
+select_if(.==TRUE | .=="One Punch Man")
+mutate()
+used to create a new variable by transforming another variable in some way.
+Example:
+
+```{r}
+#data_frame %>% 
+#mutate(new_variable=old_variable/2)
+```
+
+
+#Lab 2:
+spring_1 <- c(36.25, 35.40, 35.30)
+spring_2 <- c(35.15, 35.35, 33.35)
+spring_3 <- c(30.70, 29.65, 29.20)
+spring_4 <- c(39.70, 40.05, 38.65)
+spring_5 <- c(31.85, 31.40, 29.30)
+spring_6 <- c(30.20, 30.65, 29.75)
+spring_7 <- c(32.90, 32.50, 32.80)
+spring_8 <- c(36.80, 36.45, 33.15)
+
+spring_temps <- c(spring_1, spring_2, spring_3, spring_4, spring_5, spring_6, spring_7, spring_8)
+
+spring_matrix <- matrix(spring_temps, ncol = 3, byrow=T)
+
+colnames(spring_matrix) <- scientists
+rownames(spring_matrix) <- spring_names
+
+rowMeans(spring_matrix)
+
+cbind(spring_matrix, mean_spring_temp)
+
+#Lab 3:
+sleep <- data.frame(msleep)
+##Important!!! Functions for statistical summaries of data sets
+dim(sleep)
+table(sleep$vore)
+```{r}
+#sleep %>% 
+  #count(vore)
+```
+summary(sleep)
+names(sleep)
+glimpse(sleep)
+#Lab 4
+homerange <- read_csv("data/Tamburelloetal_HomeRangeDatabase.csv") #make sure working directory is correct for this.
+homerange$taxon <- as.factor(homerange$taxon)
+levels(homerange$taxon) #shows levels of a variable with class factor.
+ #Filter and select can be paired together to restrict the values in a data frame. USE FILTER BEFORE SELECT!!!
+```{r}
+#owls <- homerange %>% 
+  #filter(order=="strigiformes") %>% 
+  #select(common.name, mean.mass.g, log10.mass, family, genus, species) %>% 
+  #arrange(mean.mass.g)
+```
+head(owls, 1)
+
+#Lab 5 
+clean_names(data_frame)
+
+```{r}
+#fish %>% 
+  #mutate(length_mm = length*10)
+```
+```{r}
+#mammals %>%
+  #mutate_all(tolower)
+```
+```{r}
+#mammals %>%
+  #mutate(newborn_new = ifelse(newborn == -999.00, NA, newborn)
+```
+
+#Lab 6
+tabyl(superhero_info, alignment)
+
+#Lab 7
+skim(msleep24)
+hist(msleep24$sleep_total_24)
+
+```{r}
+#msleep %>% 
+  #filter(bodywt>200) %>% 
+  #summarize(mean_sleep_lg=mean(sleep_total))
+```
+
+```{r}
+#msleep %>% 
+  #filter(bodywt>200) %>% 
+  #summarize(mean_sleep_lg=mean(sleep_total), 
+            #min_sleep_lg=min(sleep_total), 
+            #max_sleep_lg=max(sleep_total),
+            #sd_sleep_lg=sd(sleep_total),
+            #total=n())
+``` 
+summarize(n_genera=n_distinct(genus)) #this is going to count the number of genera in msleep.
+
+group_by(vore) #we are grouping by feeding ecology, a categorical variable.
+You can only group by categorical variables. 
+
+summarize(number_NAs=sum(is.na(body_mass_g)))
+
+penguins %>% 
+  filter(!is.na(body_mass_g)) %>% #pull out all of the observations with a number.
+  
+```{r}
+#penguins %>% 
+  #count(island, sort = T) sort=T sorts the column in descending order
+```
+  
+```{r}
+#penguins %>% 
+  #count(island, species, sort = T) sort=T will arrange in descending order
+```
+
+```{r}
+#penguins %>% 
+  #tabyl(island, species)
+```
+
+```{r}
+#penguins %>%
+  #group_by(sex) %>%
+  #summarize(across(contains("mm"), mean, na.rm=T))
+```
+summarize_all goes across all variables.
