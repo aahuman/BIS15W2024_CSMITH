@@ -1,7 +1,7 @@
 ---
 title: "Homework 7"
 author: "Your Name Here"
-date: "2024-02-08"
+date: "2024-02-13"
 output:
   html_document: 
     theme: spacelab
@@ -347,47 +347,29 @@ summary(amphibio)
 **4. How many total NA's are in each data set? Do these values make sense? Are NA's represented by values?**   
 
 ```r
-miss_var_summary(amniota)
+amniota %>% 
+  summarize(number_NAs=sum(is.na(amniota)))
 ```
 
 ```
-## # A tibble: 36 × 3
-##    variable                  n_miss pct_miss
-##    <chr>                      <int>    <dbl>
-##  1 class                          0        0
-##  2 order                          0        0
-##  3 family                         0        0
-##  4 genus                          0        0
-##  5 species                        0        0
-##  6 subspecies                     0        0
-##  7 common_name                    0        0
-##  8 female_maturity_d              0        0
-##  9 litter_or_clutch_size_n        0        0
-## 10 litters_or_clutches_per_y      0        0
-## # ℹ 26 more rows
+## # A tibble: 1 × 1
+##   number_NAs
+##        <int>
+## 1          0
 ```
 
 ```r
-miss_var_summary(amphibio)
+amphibio %>% 
+  summarize(number_NAs=sum(is.na(amphibio)))
 ```
 
 ```
-## # A tibble: 38 × 3
-##    variable n_miss pct_miss
-##    <chr>     <int>    <dbl>
-##  1 fruits     6774    100. 
-##  2 flowers    6772     99.9
-##  3 seeds      6772     99.9
-##  4 leaves     6752     99.6
-##  5 dry_cold   6735     99.4
-##  6 vert       6657     98.2
-##  7 obs        6651     98.2
-##  8 wet_cold   6625     97.8
-##  9 crepu      6608     97.5
-## 10 dry_warm   6572     97.0
-## # ℹ 28 more rows
+## # A tibble: 1 × 1
+##   number_NAs
+##        <int>
+## 1     170566
 ```
-The numbers for amniota do not make sense. 
+The values for amniota do not make sense. NA's are being represented by -999, which is a numerical value.
 **5. Make any necessary replacements in the data such that all NA's appear as "NA".**   
 
 ```r
@@ -414,12 +396,31 @@ amniota <- read_csv("data/amniota.csv", na=c("-999")) %>% clean_names()
 ```
 
 ```r
-hist(amniota$fledging_mass_g)
+amniota
 ```
 
-![](hw7_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
-
-
+```
+## # A tibble: 21,322 × 36
+##    class order     family genus species subspecies common_name female_maturity_d
+##    <chr> <chr>     <chr>  <chr> <chr>   <lgl>      <chr>                   <dbl>
+##  1 Aves  Accipitr… Accip… Acci… albogu… NA         Pied Gosha…               NA 
+##  2 Aves  Accipitr… Accip… Acci… badius  NA         Shikra                   363.
+##  3 Aves  Accipitr… Accip… Acci… bicolor NA         Bicolored …               NA 
+##  4 Aves  Accipitr… Accip… Acci… brachy… NA         New Britai…               NA 
+##  5 Aves  Accipitr… Accip… Acci… brevip… NA         Levant Spa…              363.
+##  6 Aves  Accipitr… Accip… Acci… castan… NA         Chestnut-f…               NA 
+##  7 Aves  Accipitr… Accip… Acci… chilen… NA         Chilean Ha…               NA 
+##  8 Aves  Accipitr… Accip… Acci… chiono… NA         White-brea…              548.
+##  9 Aves  Accipitr… Accip… Acci… cirroc… NA         Collared S…               NA 
+## 10 Aves  Accipitr… Accip… Acci… cooper… NA         Cooper's H…              730 
+## # ℹ 21,312 more rows
+## # ℹ 28 more variables: litter_or_clutch_size_n <dbl>,
+## #   litters_or_clutches_per_y <dbl>, adult_body_mass_g <dbl>,
+## #   maximum_longevity_y <dbl>, gestation_d <dbl>, weaning_d <dbl>,
+## #   birth_or_hatching_weight_g <dbl>, weaning_weight_g <dbl>, egg_mass_g <dbl>,
+## #   incubation_d <dbl>, fledging_age_d <dbl>, longevity_y <dbl>,
+## #   male_maturity_d <dbl>, inter_litter_or_interbirth_interval_y <dbl>, …
+```
 **6. Use the package `naniar` to produce a summary, including percentages, of missing data in each column for the `amniota` data.**  
 
 ```r
@@ -445,15 +446,87 @@ miss_var_summary(amniota)
 
 **7. Use the package `naniar` to produce a summary, including percentages, of missing data in each column for the `amphibio` data.**
 
+```r
+miss_var_summary(amphibio)
+```
+
+```
+## # A tibble: 38 × 3
+##    variable n_miss pct_miss
+##    <chr>     <int>    <dbl>
+##  1 fruits     6774    100. 
+##  2 flowers    6772     99.9
+##  3 seeds      6772     99.9
+##  4 leaves     6752     99.6
+##  5 dry_cold   6735     99.4
+##  6 vert       6657     98.2
+##  7 obs        6651     98.2
+##  8 wet_cold   6625     97.8
+##  9 crepu      6608     97.5
+## 10 dry_warm   6572     97.0
+## # ℹ 28 more rows
+```
 
 **8. For the `amniota` data, calculate the number of NAs in the `egg_mass_g` column sorted by taxonomic class; i.e. how many NA's are present in the `egg_mass_g` column in birds, mammals, and reptiles? Does this results make sense biologically? How do these results affect your interpretation of NA's?**  
 
+```r
+amniota %>% 
+  group_by(class) %>% 
+  summarize(number_NAs=sum(is.na(egg_mass_g)))
+```
 
-**9. The `amphibio` data have variables that classify species as fossorial (burrowing), terrestrial, aquatic, or arboreal.Calculate the number of NA's in each of these variables. Do you think that the authors intend us to think that there are NA's in these columns or could they represent something else? Explain.**
+```
+## # A tibble: 3 × 2
+##   class    number_NAs
+##   <chr>         <int>
+## 1 Aves           4914
+## 2 Mammalia       4953
+## 3 Reptilia       6040
+```
 
+**9. The `amphibio` data have variables that classify species as fossorial (burrowing), terrestrial, aquatic, or arboreal. Calculate the number of NA's in each of these variables. Do you think that the authors intend us to think that there are NA's in these columns or could they represent something else? Explain.**
 
+```r
+amphibio %>% 
+  select(fos, ter, aqu, arb) %>% 
+  miss_var_summary()
+```
+
+```
+## # A tibble: 4 × 3
+##   variable n_miss pct_miss
+##   <chr>     <int>    <dbl>
+## 1 fos        6053     89.3
+## 2 arb        4347     64.2
+## 3 aqu        2810     41.5
+## 4 ter        1104     16.3
+```
+
+These rows are meant to have binary values, with a 1 indicating that a species has falls under that classification, and a 0 indicating that they don't. However, the authors instead represented the 0's as NA's, which is a mistake. 
 **10. Now that we know how NA's are represented in the `amniota` data, how would you load the data such that the values which represent NA's are automatically converted?**
 
+```r
+amniota <- read_csv("data/amniota.csv", na=c("-999")) %>% clean_names()
+```
+
+```
+## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat <- vroom(...)
+##   problems(dat)
+```
+
+```
+## Rows: 21322 Columns: 36
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr  (6): class, order, family, genus, species, common_name
+## dbl (28): female_maturity_d, litter_or_clutch_size_n, litters_or_clutches_pe...
+## lgl  (2): subspecies, female_body_mass_at_maturity_g
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.  
