@@ -373,58 +373,13 @@ The values for amniota do not make sense. NA's are being represented by -999, wh
 **5. Make any necessary replacements in the data such that all NA's appear as "NA".**   
 
 ```r
-amniota <- read_csv("data/amniota.csv", na=c("-999")) %>% clean_names()
-```
-
-```
-## Warning: One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat <- vroom(...)
-##   problems(dat)
-```
-
-```
-## Rows: 21322 Columns: 36
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr  (6): class, order, family, genus, species, common_name
-## dbl (28): female_maturity_d, litter_or_clutch_size_n, litters_or_clutches_pe...
-## lgl  (2): subspecies, female_body_mass_at_maturity_g
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
-
-```r
-amniota
-```
-
-```
-## # A tibble: 21,322 × 36
-##    class order     family genus species subspecies common_name female_maturity_d
-##    <chr> <chr>     <chr>  <chr> <chr>   <lgl>      <chr>                   <dbl>
-##  1 Aves  Accipitr… Accip… Acci… albogu… NA         Pied Gosha…               NA 
-##  2 Aves  Accipitr… Accip… Acci… badius  NA         Shikra                   363.
-##  3 Aves  Accipitr… Accip… Acci… bicolor NA         Bicolored …               NA 
-##  4 Aves  Accipitr… Accip… Acci… brachy… NA         New Britai…               NA 
-##  5 Aves  Accipitr… Accip… Acci… brevip… NA         Levant Spa…              363.
-##  6 Aves  Accipitr… Accip… Acci… castan… NA         Chestnut-f…               NA 
-##  7 Aves  Accipitr… Accip… Acci… chilen… NA         Chilean Ha…               NA 
-##  8 Aves  Accipitr… Accip… Acci… chiono… NA         White-brea…              548.
-##  9 Aves  Accipitr… Accip… Acci… cirroc… NA         Collared S…               NA 
-## 10 Aves  Accipitr… Accip… Acci… cooper… NA         Cooper's H…              730 
-## # ℹ 21,312 more rows
-## # ℹ 28 more variables: litter_or_clutch_size_n <dbl>,
-## #   litters_or_clutches_per_y <dbl>, adult_body_mass_g <dbl>,
-## #   maximum_longevity_y <dbl>, gestation_d <dbl>, weaning_d <dbl>,
-## #   birth_or_hatching_weight_g <dbl>, weaning_weight_g <dbl>, egg_mass_g <dbl>,
-## #   incubation_d <dbl>, fledging_age_d <dbl>, longevity_y <dbl>,
-## #   male_maturity_d <dbl>, inter_litter_or_interbirth_interval_y <dbl>, …
+amniota_tidy <- amniota %>% 
+  replace_with_na_all(condition = ~.x == -999)
 ```
 **6. Use the package `naniar` to produce a summary, including percentages, of missing data in each column for the `amniota` data.**  
 
 ```r
-miss_var_summary(amniota)
+miss_var_summary(amniota_tidy)
 ```
 
 ```
@@ -432,7 +387,7 @@ miss_var_summary(amniota)
 ##    variable                       n_miss pct_miss
 ##    <chr>                           <int>    <dbl>
 ##  1 subspecies                      21322    100  
-##  2 female_body_mass_at_maturity_g  21322    100  
+##  2 female_body_mass_at_maturity_g  21318    100. 
 ##  3 female_svl_at_maturity_cm       21120     99.1
 ##  4 fledging_mass_g                 21111     99.0
 ##  5 male_svl_cm                     21040     98.7
@@ -470,7 +425,7 @@ miss_var_summary(amphibio)
 **8. For the `amniota` data, calculate the number of NAs in the `egg_mass_g` column sorted by taxonomic class; i.e. how many NA's are present in the `egg_mass_g` column in birds, mammals, and reptiles? Does this results make sense biologically? How do these results affect your interpretation of NA's?**  
 
 ```r
-amniota %>% 
+amniota_tidy %>% 
   group_by(class) %>% 
   summarize(number_NAs=sum(is.na(egg_mass_g)))
 ```

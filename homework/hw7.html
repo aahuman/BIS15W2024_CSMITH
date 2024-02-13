@@ -698,50 +698,17 @@ make sense? Are NA’s represented by values?</strong></p>
 <p>The values for amniota do not make sense. NA’s are being represented
 by -999, which is a numerical value. <strong>5. Make any necessary
 replacements in the data such that all NA’s appear as “NA”.</strong></p>
-<pre class="r"><code>amniota &lt;- read_csv(&quot;data/amniota.csv&quot;, na=c(&quot;-999&quot;)) %&gt;% clean_names()</code></pre>
-<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)</code></pre>
-<pre><code>## Rows: 21322 Columns: 36
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr  (6): class, order, family, genus, species, common_name
-## dbl (28): female_maturity_d, litter_or_clutch_size_n, litters_or_clutches_pe...
-## lgl  (2): subspecies, female_body_mass_at_maturity_g
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>amniota</code></pre>
-<pre><code>## # A tibble: 21,322 × 36
-##    class order     family genus species subspecies common_name female_maturity_d
-##    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;lgl&gt;      &lt;chr&gt;                   &lt;dbl&gt;
-##  1 Aves  Accipitr… Accip… Acci… albogu… NA         Pied Gosha…               NA 
-##  2 Aves  Accipitr… Accip… Acci… badius  NA         Shikra                   363.
-##  3 Aves  Accipitr… Accip… Acci… bicolor NA         Bicolored …               NA 
-##  4 Aves  Accipitr… Accip… Acci… brachy… NA         New Britai…               NA 
-##  5 Aves  Accipitr… Accip… Acci… brevip… NA         Levant Spa…              363.
-##  6 Aves  Accipitr… Accip… Acci… castan… NA         Chestnut-f…               NA 
-##  7 Aves  Accipitr… Accip… Acci… chilen… NA         Chilean Ha…               NA 
-##  8 Aves  Accipitr… Accip… Acci… chiono… NA         White-brea…              548.
-##  9 Aves  Accipitr… Accip… Acci… cirroc… NA         Collared S…               NA 
-## 10 Aves  Accipitr… Accip… Acci… cooper… NA         Cooper&#39;s H…              730 
-## # ℹ 21,312 more rows
-## # ℹ 28 more variables: litter_or_clutch_size_n &lt;dbl&gt;,
-## #   litters_or_clutches_per_y &lt;dbl&gt;, adult_body_mass_g &lt;dbl&gt;,
-## #   maximum_longevity_y &lt;dbl&gt;, gestation_d &lt;dbl&gt;, weaning_d &lt;dbl&gt;,
-## #   birth_or_hatching_weight_g &lt;dbl&gt;, weaning_weight_g &lt;dbl&gt;, egg_mass_g &lt;dbl&gt;,
-## #   incubation_d &lt;dbl&gt;, fledging_age_d &lt;dbl&gt;, longevity_y &lt;dbl&gt;,
-## #   male_maturity_d &lt;dbl&gt;, inter_litter_or_interbirth_interval_y &lt;dbl&gt;, …</code></pre>
+<pre class="r"><code>amniota_tidy &lt;- amniota %&gt;% 
+  replace_with_na_all(condition = ~.x == -999)</code></pre>
 <p><strong>6. Use the package <code>naniar</code> to produce a summary,
 including percentages, of missing data in each column for the
 <code>amniota</code> data.</strong></p>
-<pre class="r"><code>miss_var_summary(amniota)</code></pre>
+<pre class="r"><code>miss_var_summary(amniota_tidy)</code></pre>
 <pre><code>## # A tibble: 36 × 3
 ##    variable                       n_miss pct_miss
 ##    &lt;chr&gt;                           &lt;int&gt;    &lt;dbl&gt;
 ##  1 subspecies                      21322    100  
-##  2 female_body_mass_at_maturity_g  21322    100  
+##  2 female_body_mass_at_maturity_g  21318    100. 
 ##  3 female_svl_at_maturity_cm       21120     99.1
 ##  4 fledging_mass_g                 21111     99.0
 ##  5 male_svl_cm                     21040     98.7
@@ -774,7 +741,7 @@ NAs in the <code>egg_mass_g</code> column sorted by taxonomic class;
 i.e. how many NA’s are present in the <code>egg_mass_g</code> column in
 birds, mammals, and reptiles? Does this results make sense biologically?
 How do these results affect your interpretation of NA’s?</strong></p>
-<pre class="r"><code>amniota %&gt;% 
+<pre class="r"><code>amniota_tidy %&gt;% 
   group_by(class) %&gt;% 
   summarize(number_NAs=sum(is.na(egg_mass_g)))</code></pre>
 <pre><code>## # A tibble: 3 × 2

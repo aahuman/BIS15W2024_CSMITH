@@ -80,12 +80,12 @@ amphibio %>%
 The values for amniota do not make sense. NA's are being represented by -999, which is a numerical value.
 **5. Make any necessary replacements in the data such that all NA's appear as "NA".**   
 ```{r}
-amniota <- read_csv("data/amniota.csv", na=c("-999")) %>% clean_names()
-amniota
+amniota_tidy <- amniota %>% 
+  replace_with_na_all(condition = ~.x == -999)
 ```
 **6. Use the package `naniar` to produce a summary, including percentages, of missing data in each column for the `amniota` data.**  
 ```{r}
-miss_var_summary(amniota)
+miss_var_summary(amniota_tidy)
 ```
 
 **7. Use the package `naniar` to produce a summary, including percentages, of missing data in each column for the `amphibio` data.**
@@ -95,7 +95,7 @@ miss_var_summary(amphibio)
 
 **8. For the `amniota` data, calculate the number of NAs in the `egg_mass_g` column sorted by taxonomic class; i.e. how many NA's are present in the `egg_mass_g` column in birds, mammals, and reptiles? Does this results make sense biologically? How do these results affect your interpretation of NA's?**  
 ```{r}
-amniota %>% 
+amniota_tidy %>% 
   group_by(class) %>% 
   summarize(number_NAs=sum(is.na(egg_mass_g)))
 ```
