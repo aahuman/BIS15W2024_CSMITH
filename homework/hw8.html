@@ -586,24 +586,73 @@ sydneybeaches_long_clean</code></pre>
 each beach. Think about which data you will use- long or wide.</li>
 </ol>
 <p>It is better to use long data for this.</p>
-<pre class="r"><code>sydneybeaches_long_clean %&gt;% 
-  group_by(year) %&gt;% 
+<pre class="r"><code>mean_bacteria &lt;- sydneybeaches_long_clean %&gt;% 
+  group_by(site, year) %&gt;% 
   summarize(mean_bacteria=mean(enterococci_cfu_100ml, na.rm=T))</code></pre>
-<pre><code>## # A tibble: 6 × 2
-##   year  mean_bacteria
-##   &lt;chr&gt;         &lt;dbl&gt;
-## 1 2013           50.6
-## 2 2014           26.3
-## 3 2015           31.2
-## 4 2016           42.2
-## 5 2017           20.7
-## 6 2018           33.1</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;site&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre class="r"><code>mean_bacteria</code></pre>
+<pre><code>## # A tibble: 66 × 3
+## # Groups:   site [11]
+##    site         year  mean_bacteria
+##    &lt;chr&gt;        &lt;chr&gt;         &lt;dbl&gt;
+##  1 Bondi Beach  2013           32.2
+##  2 Bondi Beach  2014           11.1
+##  3 Bondi Beach  2015           14.3
+##  4 Bondi Beach  2016           19.4
+##  5 Bondi Beach  2017           13.2
+##  6 Bondi Beach  2018           22.9
+##  7 Bronte Beach 2013           26.8
+##  8 Bronte Beach 2014           17.5
+##  9 Bronte Beach 2015           23.6
+## 10 Bronte Beach 2016           61.3
+## # ℹ 56 more rows</code></pre>
 <ol start="8" style="list-style-type: decimal">
-<li><p>Make the output from question 7 easier to read by pivoting it to
-wide format.</p></li>
-<li><p>What was the most polluted beach in 2013?</p></li>
-<li><p>Please complete the class project survey at: <a href="https://forms.gle/H2j69Z3ZtbLH3efW6">BIS 15L Group
-Project</a></p></li>
+<li>Make the output from question 7 easier to read by pivoting it to
+wide format.</li>
+</ol>
+<pre class="r"><code>mean_bacteria %&gt;% 
+  pivot_wider(names_from = &quot;site&quot;, 
+              values_from = &quot;mean_bacteria&quot;)</code></pre>
+<pre><code>## # A tibble: 6 × 12
+##   year  `Bondi Beach` `Bronte Beach` `Clovelly Beach` `Coogee Beach`
+##   &lt;chr&gt;         &lt;dbl&gt;          &lt;dbl&gt;            &lt;dbl&gt;          &lt;dbl&gt;
+## 1 2013           32.2           26.8             9.28           39.7
+## 2 2014           11.1           17.5            13.8            52.6
+## 3 2015           14.3           23.6             8.82           40.3
+## 4 2016           19.4           61.3            11.3            59.5
+## 5 2017           13.2           16.8             7.93           20.7
+## 6 2018           22.9           43.4            10.6            21.6
+## # ℹ 7 more variables: `Gordons Bay (East)` &lt;dbl&gt;, `Little Bay Beach` &lt;dbl&gt;,
+## #   `Malabar Beach` &lt;dbl&gt;, `Maroubra Beach` &lt;dbl&gt;,
+## #   `South Maroubra Beach` &lt;dbl&gt;, `South Maroubra Rockpool` &lt;dbl&gt;,
+## #   `Tamarama Beach` &lt;dbl&gt;</code></pre>
+<ol start="9" style="list-style-type: decimal">
+<li>What was the most polluted beach in 2013?</li>
+</ol>
+<pre class="r"><code>sydneybeaches_long_clean %&gt;% 
+  filter(year==&quot;2013&quot;) %&gt;% 
+  group_by(site) %&gt;% 
+  summarize(pollution=(mean(enterococci_cfu_100ml))) %&gt;% 
+  arrange(desc(pollution))</code></pre>
+<pre><code>## # A tibble: 11 × 2
+##    site                    pollution
+##    &lt;chr&gt;                       &lt;dbl&gt;
+##  1 Little Bay Beach           122.  
+##  2 Malabar Beach              101.  
+##  3 South Maroubra Rockpool     96.4 
+##  4 Maroubra Beach              47.1 
+##  5 Coogee Beach                39.7 
+##  6 South Maroubra Beach        39.3 
+##  7 Bondi Beach                 32.2 
+##  8 Tamarama Beach              29.7 
+##  9 Bronte Beach                26.8 
+## 10 Gordons Bay (East)          24.8 
+## 11 Clovelly Beach               9.28</code></pre>
+<p>Little Bay Beach was the most polluted in 2013.</p>
+<ol start="10" style="list-style-type: decimal">
+<li>Please complete the class project survey at: <a href="https://forms.gle/H2j69Z3ZtbLH3efW6">BIS 15L Group
+Project</a></li>
 </ol>
 </div>
 <div id="push-your-final-code-to-github" class="section level2">

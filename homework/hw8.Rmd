@@ -96,18 +96,30 @@ sydneybeaches_long_clean
 It is better to use long data for this.
 
 ```{r}
-sydneybeaches_long_clean %>% 
-  group_by(year) %>% 
+mean_bacteria <- sydneybeaches_long_clean %>% 
+  group_by(site, year) %>% 
   summarize(mean_bacteria=mean(enterococci_cfu_100ml, na.rm=T))
-```
-
-
-```{r}
+mean_bacteria
 ```
 
 8. Make the output from question 7 easier to read by pivoting it to wide format.
 
+```{r}
+mean_bacteria %>% 
+  pivot_wider(names_from = "site", 
+              values_from = "mean_bacteria")
+```
+
 9. What was the most polluted beach in 2013?
+
+```{r}
+sydneybeaches_long_clean %>% 
+  filter(year=="2013") %>% 
+  group_by(site) %>% 
+  summarize(pollution=(mean(enterococci_cfu_100ml))) %>% 
+  arrange(desc(pollution))
+```
+Little Bay Beach was the most polluted in 2013.
 
 10. Please complete the class project survey at: [BIS 15L Group Project](https://forms.gle/H2j69Z3ZtbLH3efW6)
 
