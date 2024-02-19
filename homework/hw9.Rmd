@@ -121,25 +121,20 @@ This graph indicates that there is an inverse relationship between a college's a
 
 8. The column titled `INSTNM` is the institution name. We are only interested in the University of California colleges. Make a new data frame that is restricted to UC institutions. You can remove `Hastings College of Law` and `UC San Francisco` as we are only interested in undergraduate institutions.
 
-```{r}
-univ_calif <- colleges %>% 
-  filter(instnm=="University of California-Davis"| instnm=="University of California-San Diego" | instnm=="University of California-Irvine" | instnm=="University of California-Riverside" | instnm=="University of California-Los Angeles" | instnm=="University of California-Santa Cruz" | instnm=="University of California-Berkeley" | instnm=="University of California-Santa Barbara" | instnm=="University of California-Hastings College of Law" | instnm=="University of California-San Francisco")
-```
 
 Remove `Hastings College of Law` and `UC San Francisco` and store the final data frame as a new object `univ_calif_final`.
-
-```{r}
-univ_calif_final <- univ_calif %>% 
-  filter(instnm!="University of California-San Francisco" & instnm!="University of California-Hastings College of Law")
-```
 
 Use `separate()` to separate institution name into two new columns "UNIV" and "CAMPUS".
 
 ```{r}
-univ_calif_final <- univ_calif_final %>% 
-  separate(instnm, into=c("univ", "campus"), sep="-")
+univ_calif <- colleges %>% 
+  separate(instnm, into=c("univ", "campus"), sep="-") %>% 
+  filter(univ=="University of California")
 ```
-
+```{r}
+univ_calif_final <- univ_calif %>% 
+  filter(campus!="San Francisco" & campus!="Hastings College of Law")
+```
 
 9. The column `ADM_RATE` is the admissions rate by campus. Which UC has the lowest and highest admissions rates? Produce a numerical summary and an appropriate plot.
 
