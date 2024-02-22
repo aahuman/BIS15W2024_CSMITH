@@ -74,6 +74,10 @@ deserts %>%
 3. What is the proportion of taxa included in this study? Show a table and plot that reflects this count.
 
 ```{r}
+table(deserts$taxa)
+```
+
+```{r}
 deserts %>% 
   ggplot(aes(taxa))+
   geom_bar()+
