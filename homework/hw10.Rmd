@@ -50,6 +50,18 @@ deserts <- deserts %>%
 
 ```{r}
 deserts %>% 
+  summarize(n_species=n_distinct(species))
+```
+```{r}
+deserts %>% 
+  summarize(n_genera=n_distinct(genus))
+```
+```{r}
+nrow(deserts)
+```
+There are 34,786 observations.
+```{r}
+deserts %>% 
   count(genus, species) %>% 
   arrange(n)
 ``````
