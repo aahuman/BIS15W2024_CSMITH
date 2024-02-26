@@ -1,0 +1,24 @@
+---
+title: "midterm_2_notes.Rmd"
+author: "Clive Smith"
+date: "2024-02-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Midterm 2 notes
+
+##Graph aesthetics
+```{r}
+  geom_picksomething(color="black", fill="dodgerblue2", alpha=0.4)+
+  theme_linedraw()+
+  theme(plot.title=element_text(size = rel(1.75), hjus=0.5), axis.text.x = element_text(angle = 60,     just=1))+
+  labs(title="Life Expectancy by Year", 
+       x=NULL, y="Life Expectancy in Years")
+```
+
+
+
