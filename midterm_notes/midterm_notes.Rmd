@@ -1,0 +1,523 @@
+---
+title: "Midterm Notes"
+author: "Clive Smith"
+date: "2024-02-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load library:
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(janitor)
+library(skimr)
+```
+
+>>>
+# Lab 2: 
+
+```{r}
+object <- matrix(dataset.data, nrow=n)
+```
+
+
+```{r}
+object <- cbind(dataset, row_name = object_with_mean) #allows me to addd coloumn
+```
+
+>>>
+# Lab 3: 
+
+```{r}
+object <- data.frame(matrix_1, matrix_2, matrix_2)
+```
+
+```{r}
+write.csv(dataset, "name_of_it", row.names = FALSE)
+object <- read_csv("folder/dataset_name")
+library(janitor)
+clean_names(dataset)
+object <- readr::read_csv("folder/dataset_name")
+```
+
+
+For basic analysis:
+```{r}
+str(dataset) 
+glimpse(dataset)
+names(dataset)
+summary(dataset)
+dim(dataset)
+```
+
+```{r}
+head(dataset, n) #gives you first row frame
+tail(dataset, n) #last rows 
+
+table(dataset$column)
+count(dataset$column) #for the pipe
+```
+
+
+
+Mean alternative:
+```{r}
+object <- t.test(large$sleep_total, small$sleep_total)
+object 
+```
+
+Mean compersion: 
+```{r}
+if (mean(filtered_dataset$column) > mean(filtered_dataset.1$column)) {
+  cat("The mean of 'filtered_dataset' is bigger.\n")
+} else if (mean(filtered_dataset1$column) > mean(filtered_dataset$column)) {
+  cat("The mean of 'filtered_dataset1' is bigger.\n")
+} else {
+  cat("The means are equal.\n")
+}
+```
+
+
+
+Finding max of ceratin colums:
+```{r}
+object <- max(dataset$column)
+object_2 <- dataset[dataset$column == object, c("coulumn", "column", "column")]
+object_2
+```
+
+>>>
+ Lab 4:
+
+```{r}
+select(dataset, matches/contains/ends_with("a.+er")) #handy bit of code for the project (parts of words)
+
+select(dataset, column)
+
+select_if(dataset, ~!is.numeric(.)) # (.) all of the cells, ! - all other then mentions data 
+
+filter(dataset, column %in% c(167, 175))
+```
+
+```{r}
+select(fish, -"fish_id", -"annnumber", -"length", -"radii_length_mm")
+```
+
+```{r}
+largest_home_range <- vertebrate_clean %>%
+  filter(class == "aves" & !is.na(mean_hra_m2)) %>% #for data where we have NA
+  arrange(desc(mean_hra_m2)) %>%
+  head(1) %>%
+  select(mean_hra_m2, common_name, genus, species)
+largest_home_range
+```
+
+>>>
+# Lab 5
+
+```{r}
+filter(dataset, column == "AL" & column1 > 350) 
+```
+
+
+Here we compare means
+```{r}
+if (mean(mammals$mass[mammals$genus == "Lophocebus"]) > 
+    mean(mammals$mass[mammals$genus == "Erythrocebus"]) &&
+    mean(mammals$mass[mammals$genus == "Erythrocebus"]) > 
+    mean(mammals$mass[mammals$genus == "Macaca"])) {
+  cat("Lophocebus has the smallest newborn mass among the specified genera.\n")
+} else if (mean(mammals$mass[mammals$genus == "Erythrocebus"]) > 
+           mean(mammals$mass[mammals$genus == "Lophocebus"]) &&
+           mean(mammals$mass[mammals$genus == "Lophocebus"]) > 
+           mean(mammals$mass[mammals$genus == "Macaca"])) {
+  cat("Erythrocebus has the smallest newborn mass among the specified genera.\n")
+} else if (mean(mammals$mass[mammals$genus == "Macaca"]) > 
+           mean(mammals$mass[mammals$genus == "Lophocebus"]) &&
+           mean(mammals$mass[mammals$genus == "Lophocebus"]) > 
+           mean(mammals$mass[mammals$genus == "Erythrocebus"])) {
+  cat("Macaca has the smallest newborn mass among the specified genera.\n")
+} else {
+  cat("The means are equal.\n")
+}
+```
+
+
+
+
+```{r}
+fish %>% 
+  select(lakeid, radii_length_mm) %>% 
+  filter(lakeid == "AL" | lakeid == "AR") %>% 
+  filter (between(radii_length_mm, 2, 4)) %>% 
+  arrange(desc(radii_length_mm)) #here we combine AR and AL and sort them from high to low
+```
+
+```{r}
+fish %>% 
+  mutate(length_mm = length*10) %>% 
+  select(fish_id, length, length_mm) # allows to create new column fro existing one
+```
+  
+```{r}
+mammals %>%
+  mutate_all(tolower) # all to lower case
+
+```
+
+
+>>>
+# Lab 6 
+
+Pullinng out top value: 
+```{r}
+mammals %>% 
+  select(genus, species, max_life) %>%
+  mutate(max_life_new = ifelse(max_life == -999.00, NA, max_life))%>% 
+  arrange(desc(max_life)) %>%
+  slice(1)
+```
+
+
+
+Find your hero in the superhero_info data? Show their info!  
+```{r}
+my_favorite <- superhero_power %>%
+  filter(hero_names == "Groot") %>%
+  select_if(~all(. == "TRUE") | . == "Groot")
+my_favorite
+```
+
+```{r}
+my_hero_info <- superhero_power %>%
+  filter(hero_names %in% my_favorite$hero_names)
+my_hero_info
+```
+
+
+
+Basic data analysis 
+```{r}
+tabyl(dataset, column)
+```
+
+>>>
+# Lab 7
+
+```{r}
+msleep24$sleep_total_24 <- as.numeric(msleep24$sleep_total_24)
+hist(msleep24$sleep_total_24, main = "Histogram of sleept_total", xlab = "sleept_total") 
+```
+
+
+
+
+```{r}
+msleep %>%
+  filter(bodywt > 200) %>%
+  summarise(mean_sleep_lg = mean(sleep_total),
+            min_sleep_lg = min(sleep_total),
+            max_sleep_lg = max(sleep_total), 
+            sd_sleep_lg = sd(sleep_total), 
+            total=n())
+```
+            
+```{r}
+msleep %>% 
+  filter(bodywt > 100) %>%
+  n_distinct()
+```
+
+```{r}
+msleep %>%
+  group_by(order) %>%
+  summarize(min_brainwt = min(brainwt, na.rm=TRUE),
+            max_brainwt = max(brainwt, na.rm=TRUE),
+            mean_brainwt = mean(brainwt, na.rm=TRUE),
+            total=n())
+```
+
+
+            
+```{r}
+penguins %>%
+  group_by(species, island) %>%
+  filter(!is.na(body_mass_g)) %>%
+ summarize(mean_body_mass_g = mean(body_mass_g))
+```
+
+```{r}
+penguins %>% 
+  group_by(species, island) %>% 
+  summarize(n=n(), .groups= 'keep')#the .groups argument here just prevents a warning message, n=n is a number of observations
+```
+
+  
+  
+```{r}
+penguins %>% 
+  count(island, species, sort = T) # sort=T will arrange in descending order
+```
+
+```{r}
+penguins %>%
+  group_by(species, island) %>%
+  summarize(n_nas = sum(is.na(sex)))
+```
+  
+```{r}
+penguins %>%
+  summarize(across(contains("mm"), \(x) mean(x, na.rm = TRUE))) #to get rid of R console, (\(x))
+```
+  
+```{r}
+penguins %>%
+  summarise(across(starts_with("bill"), mean, na.rm=T))
+```
+
+## ggplot aesthetics
+
+```{r}
+  geom_picksomething(color="black", fill="dodgerblue2", alpha=0.4)+
+  theme_linedraw()+
+  theme(plot.title=element_text(size = rel(1.75), hjus=0.5), axis.text.x = element_text(angle = 60,     hjust=1))+
+  labs(title="Life Expectancy by Year", 
+       x=NULL, y="Life Expectancy in Years")
+```
+  
+##lab 8
+
+For a summary of NAs in the data.
+```{r}
+life_history %>% 
+  map_df(~ sum(is.na(.)))
+```
+
+One way to manage NAs (not very efficient).
+```{r}
+life_history %>% 
+  mutate(wean_mass_new=ifelse(wean_mass==-999, NA, wean_mass))
+```
+
+Easiest way to manage NAs, but also can be quite risky.
+```{r}
+life_history <- life_history <- read_csv("data/mammal_lifehistories_v3.csv", na= c("NA", " ", ".", "-999", "not measured")) %>% 
+  clean_names()
+# you need to know how the NA's are represented in the data
+# you don't want to do this by default
+```
+
+better way to manage NAs.
+```{r}
+amniota_tidy <- amniota %>% 
+  replace_with_na_all(condition = ~.x == -999)
+```
+
+Another way to manage NAs; more targeted.
+```{r}
+life_history %>% 
+  replace_with_na(replace = list(newborn = "not measured", 
+                                 weaning= -999, 
+                                 wean_mass= -999, 
+                                 afr= -999, 
+                                 max_life= 0, 
+                                 litter_size= -999, 
+                                 gestation= -999, 
+                                 mass= -999))
+```
+
+summarizes NAs (assuming they're not classified as something else).
+```{r}
+amniota %>% 
+  summarize(number_NAs=sum(is.na(amniota)))
+```
+
+another way to summarize NAs.
+```{r}
+miss_var_summary(amniota_tidy)
+```
+
+##Lab 9
+
+Use pivot longer as necessary to make tidy data.
+
+pivot longer.
+```{r}
+heartrate %>% 
+  pivot_longer(-patient, #patient will not move
+               names_to = "drug", #make a new column called "drug"
+               values_to="heartrate" #values moved to a new column called "heartrate"
+               )
+```
+
+```{r}
+billboard %>% 
+   pivot_longer(
+   cols = starts_with("wk"), #columns that start with "wk"
+   names_to = "week",
+   names_prefix = "wk",
+   values_to = "rank",
+   values_drop_na = TRUE)
+```
+
+separate.
+```{r}
+heartrate2 %>% 
+  separate(patient, into= c("patient", "sex"), sep = "_")
+```
+
+unite
+```{r}
+heartrate3 %>% 
+  unite(patient_sex, "patient", "sex", sep=" ")
+```
+
+pivot wider
+`values_from` to identify the values associated with the new columns.
+```{r}
+tb_data %>% 
+  pivot_wider(names_from = "key", #the observations under key will become new columns
+              values_from = "value") #the values under value will be moved to the new columns
+```
+
+##lab 10
+
+makes a boxplot
+```{r}
+homerange %>% 
+  ggplot(aes(x = class, y = log10.mass)) +
+  geom_boxplot()
+```
+
+Makes a bar plot (use stat="identity" inside of geom_bar() to specify 2 variables)
+```{r}
+homerange %>% 
+  filter(family=="salmonidae") %>%
+  select(common.name, log10.mass) %>% 
+  ggplot(aes(x=common.name, y=log10.mass))+ #notice the switch in x and y
+  geom_col()+
+  coord_flip()
+```
+
+##lab 11
+
+```{r}
+options(scipen=999)#cancels scientific notation for the session
+```
+
+```{r}
+scale_y_log10() #scales y-axis by log_10.
+```
+
+x=(reorder(order, mean_mass)) reorders the x-axis, order, by mean_mass values.
+```{r}
+life_history %>% 
+  group_by(order) %>% 
+  summarize(mean_mass=mean(mass, na.rm=T)) %>% 
+  ggplot(aes(x=reorder(order, mean_mass), y=mean_mass))+ #this allows us to order the x axis by mean_mass
+  geom_col()
+```
+
+Makes a scatterplot (geom_jitter reduces overplotting)
+```{r}
+life_history %>% 
+  ggplot(aes(x=gestation, y=wean_mass))+
+  geom_jitter(na.rm=T)+ #prevents overplotting
+  scale_y_log10()
+```
+
+Overlays a line of best fit onto a scatterplot.
+```{r}
+elephants %>% 
+  ggplot(aes(x=age, y=height))+
+  geom_point()+
+  geom_smooth(method=lm, se=F)
+```
+
+`size` adjusts the size of points relative to a continuous variable.
+```{r}
+life_history %>% 
+  ggplot(aes(x=gestation, y=log10(mass), size=mass))+
+  geom_point(na.rm=T)
+```
+
+We can also map shapes to another categorical variable.
+```{r}
+p + geom_point(aes(color=thermoregulation, shape=thermoregulation), size=1.5)
+```
+
+We can also scale all bars to a percentage.
+```{r}
+homerange %>% 
+  ggplot(aes(x = taxon, fill = trophic.guild))+
+  geom_bar(position = position_fill())+ 
+  scale_y_continuous(labels = scales::percent)+
+  coord_flip()
+```
+
+position="dodge" puts things onto different columns.
+```{r}
+position="dodge"
+```
+
+##lab 12
+line plot
+```{r}
+deserts %>% 
+  filter(species_id=="DM"| species_id=="DS") %>% 
+    mutate(year=as.factor(year)) %>% 
+  group_by(year, species_id) %>% 
+  summarize(n=n(), .groups='keep') %>% 
+  ggplot(aes(x=year, y=n, group=species_id, color=species_id))+
+  geom_line()+
+  geom_point(shape=1)+ #you can experiment with shapes
+  theme(axis.text.x=element_text(angle=60, hjust=1))+
+  labs(title="Number of Samples for Species DM & DS", 
+       x="Year", y="n")
+```
+
+```{r}
+homerange %>% 
+  ggplot(aes(x = log10.mass)) +
+  geom_histogram(bins = 20)+ #we can adjust the number of bins with the bins argument
+  labs(title = "Distribution of Body Mass")
+```
+
+makes a curve (similar to a histogram, but for continuous variables)
+```{r}
+homerange %>% 
+  ggplot(aes(x=log10.hra))+
+  geom_density(fill = "violetred4", alpha = 0.4, color = "black")+
+  labs(title = "Distribution of Homerange")
+```
+
+case_when
+```{r}
+homerange %>% 
+  mutate(range_category=case_when(log10.hra<3.65 ~ "very small", 
+                                  log10.hra>=3.65 & log10.hra<=4.59 ~ "small", 
+                                  log10.hra>4.59 & log10.hra<=6.02 ~ "medium", 
+                                  log10.hra>6.02 ~ "large"))
+```
+
+facet_wrap()
+```{r}
+homerange %>% 
+  ggplot(aes(x=taxon, y=log10.mass))+
+  geom_boxplot()+
+  facet_wrap(~trophic.guild)+
+  theme(axis.text.x = element_text(angle = 60, hjust=1))
+```
+
+`facet_grid()` will also allow the comparison of two categorical variables, just remember a~b where a is rows and b is columns.  
+```{r}
+homerange %>% 
+  ggplot(aes(x=taxon, y=log10.mass))+
+  geom_boxplot()+
+  facet_grid(trophic.guild~thermoregulation)+
+  theme(axis.text.x = element_text(angle = 60, hjust=1))
+```
