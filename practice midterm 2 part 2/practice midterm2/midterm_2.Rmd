@@ -34,21 +34,120 @@ surgery <- read_csv("data/surgery.csv")
 
 1. Use the summary function(s) of your choice to explore the data and get an idea of its structure. Please also check for NA's.
 
+```{r}
+str(surgery)
+```
+```{r}
+miss_var_summary(surgery)
+```
+
 2. Let's explore the participants in the study. Show a count of participants by race AND make a plot that visually represents your output.
+
+```{r}
+surgery %>% 
+  count(race)
+```
+
+```{r}
+surgery %>% 
+  filter(race!="NA") %>% 
+  ggplot(aes(race))+
+  geom_bar(color="black", fill="dodgerblue2", alpha=0.4)+
+  theme_linedraw()+
+  theme(plot.title=element_text(size = rel(1.75), hjus=0.5))+
+  labs(title="Surgery Patient Demographics", 
+       x="Race", y="Number of Patients")
+```
 
 3. What is the mean age of participants by gender? (hint: please provide a number for each) Since only three participants do not have gender indicated, remove these participants from the data.
 
+```{r}
+surgery <- surgery %>% 
+  filter(gender!="NA")
+```
+
+```{r}
+surgery %>% 
+  group_by(gender) %>% 
+  summarize(mean_age=mean(age, na.rm=T))
+```
 4. Make a plot that shows the range of age associated with gender.
+
+```{r}
+surgery %>% 
+  filter(age!="NA") %>% 
+  group_by(gender) %>% 
+  ggplot(aes(x=gender, y=age))+
+  geom_boxplot(color="black", fill="dodgerblue2", alpha=0.4)+
+  theme_linedraw()+
+  theme(plot.title=element_text(size = rel(1.75), hjus=0.5))+
+  labs(title="Age Range by Gender", 
+       x="Gender", y="Age")
+```
 
 5. How healthy are the participants? The variable `asa_status` is an evaluation of patient physical status prior to surgery. Lower numbers indicate fewer comorbidities (presence of two or more diseases or medical conditions in a patient). Make a plot that compares the number of `asa_status` I-II, III, and IV-V.
 
+```{r}
+surgery %>% 
+  group_by(asa_status) %>% 
+  count(asa_status) %>% 
+  filter(asa_status!="NA") %>% 
+  ggplot(aes(x=asa_status, y=n))+
+  geom_col(color="black", fill="dodgerblue2", alpha=0.4)+
+  theme_linedraw()+
+  theme(plot.title=element_text(size = rel(1.75), hjus=0.5))+
+  labs(title="Patients by ASA Status", 
+       x="ASA Status", y="Number of Patients")
+```
+
 6. Create a plot that displays the distribution of body mass index for each `asa_status` as a probability distribution- not a histogram. (hint: use faceting!)
+
+```{r}
+surgery %>% 
+  group_by(asa_status) %>% 
+  filter(bmi!="NA" & asa_status!="NA") %>% 
+  ggplot(aes(x=bmi))+
+  facet_wrap(~asa_status)+
+  geom_density(color="black", fill="dodgerblue2", alpha=0.4)+
+  theme_linedraw()+
+  theme(plot.title=element_text(size = rel(1.75), hjus=0.5))+
+  labs(title="BMI Distribution by ASA Status", 
+       x="BMI", y=NULL)
+```
 
 The variable `ccsmort30rate` is a measure of the overall 30-day mortality rate associated with each type of operation. The variable `ccscomplicationrate` is a measure of the 30-day in-hospital complication rate. The variable `ahrq_ccs` lists each type of operation.  
 
 7. What are the 5 procedures associated with highest risk of 30-day mortality AND how do they compare with the 5 procedures with highest risk of complication? (hint: no need for a plot here)
 
+```{r}
+surgery %>% 
+  group_by(ahrq_ccs) %>% 
+  summarize(death_rate=mean(ccsmort30rate, na.rm=T)) %>% 
+  arrange(desc(death_rate)) %>% 
+  head(5)
+```
+```{r}
+surgery %>% 
+  group_by(ahrq_ccs) %>% 
+  summarize(compl_rate=mean(ccscomplicationrate, na.rm=T)) %>% 
+  arrange(desc(compl_rate)) %>% 
+  head(5)
+```
+
 8. Make a plot that compares the `ccsmort30rate` for all listed `ahrq_ccs` procedures.
+
+```{r}
+surgery %>% 
+  group_by(ahrq_ccs) %>% 
+  summarize(death_rate=mean(ccsmort30rate, na.rm = T)) %>% 
+  ggplot(aes(x=reorder(ahrq_ccs, death_rate), y=death_rate))+
+  geom_col(color="black", fill="dodgerblue2", alpha=0.4)+
+  theme_linedraw()+
+  theme(plot.title=element_text(size = rel(1.75), hjus=0.5))+
+  labs(title="Death Rate by Surgery", 
+       x=NULL, y="Death Rate")+
+  coord_flip()
+```
 
 9. When is the best month to have surgery? Make a chart that shows the 30-day mortality and complications for the patients by month. `mort30` is the variable that shows whether or not a patient survived 30 days post-operation.
 
