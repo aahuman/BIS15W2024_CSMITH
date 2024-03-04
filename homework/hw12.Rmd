@@ -3,9 +3,9 @@ title: "Homework 12"
 author: "Please Add Your Name Here"
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  html_document: 
     theme: spacelab
-    toc: no
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -25,7 +25,7 @@ library(ggmap)
 ``` 
 
 ```{r}
-register_stadiamaps("67630bf1-695a-4490-809b-8d6a23d34276", write = FALSE)
+#register_stadiamaps("", write = FALSE)
 ```
 
 ## Load the Data
