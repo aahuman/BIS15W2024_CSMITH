@@ -350,7 +350,7 @@ Sneaky Example...
 ui <- fluidPage(    
   
   #shinythemes::themeSelector(),  # <--- Add this somewhere in the UI
-  theme = shinytheme("superhero"),
+  #theme = shinytheme("superhero"),
   
   titlePanel("Log 10 Homerange by Taxon"), # give the page a title
   

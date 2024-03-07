@@ -3,10 +3,8 @@ title: "Homework 13"
 author: "Please Add Your Name Here"
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  html_document: 
     theme: spacelab
-    toc: no
-
 ---
 
 ```{r setup, include=FALSE}
@@ -25,7 +23,6 @@ library(tidyverse)
 library(shiny)
 library(shinydashboard)
 library(naniar)
-library(shinydashboard)
 ```
 
 ## Data
@@ -106,7 +103,7 @@ shinyApp(ui, server)
 
 ```{r}
 ui <- dashboardPage(
-  dashboardHeader(title = "UC Campus Admissions by Ethnicity 2010-2019"),
+  dashboardHeader(title = "UC Campus Admissions by Year 2010-2019"),
   dashboardSidebar(disable=T),
   dashboardBody(
   fluidRow(
