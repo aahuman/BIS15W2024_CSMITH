@@ -49,7 +49,7 @@ library(shinydashboard)
 ```{r}
 #load the Netflix Data in your Data folder, save it under the object name netflix
 
-
+read_csv("Data/netflix_titles.csv") -> netflix
 ```
 
 *Did copilot help you write the code above? Could anything about the prompt be improved to help Copilot understand what you want to do more accurately?*
@@ -58,51 +58,82 @@ library(shinydashboard)
 ## Lets Practice:
 Explore the elements in your data: include a comment within your code chunk to prompt Copilot to use the function of your choice
 ```{r}
-
-
+#Use the head function to get the first 6 rows of the netflix data
+head(netflix)
 ```
+
+```{r}
+#Use the summary function to get a summary of the netflix data
+summary(netflix)
+```
+```{r}
+#use names to get the column names of the netflix data
+names(netflix)
+```
+
 *Did copilot use your preferred method to get the summary of the data? If not, how could you improve the prompt to get the desired output?*
 
 
 Sort out the movies from the netflix into an new object called netflix_movies
 ```{r} 
-
+#use filter to get the movies from the netflix data
+filter(netflix, type == "Movie") -> netflix_movies
 ```
 
 
 Which director has the most movies on netflix?
 ```{r}
-
+#use count to get the number of movies by director
+count(netflix_movies, director, sort = TRUE, na.rm = TRUE)
 
 ```
 *Do you see anything wrong with the table above, look at row 1. Write a prompt below to fix this.*
 
-[insert your prompt here]
+Filter to sort out the director with the most movies but remove the NA's
 ```{r}
-
+#Filter to sort out the director with the most movies but remove the NA's
+netflix_movies %>%
+filter(director != "NA") %>% 
+  count(director, sort = TRUE)
 ```
 
 
-
-Which director had the most movies by release year and remove the NA's?
-```{r}
-
-
-```
 *See anything else interesting about this table, look at the first director on the table. Could this be a problem and how can we edit the dataset to fix this? Try writing a prompt.*
 
-
-[Insert your prompt here]
 ```{r}
-
+netflix_movies %>% 
+  filter(director=="Rajiv Chilaka") %>% 
+  count(director)
 ```
 
+Separate each director into their own row
+
+```{r}
+#Separate each director into their own row
+netflix_movies %>%
+  separate_rows(director, sep = ",") %>%
+  filter(director != "NA") %>%
+  count(director) %>% 
+  arrange(desc(n))
+```
 
 
 Make a bar plot of the top directors with the most movies on netflix
 ```{r}
-
-
+#Make a bar plot of the top directors with the most movies on netflix
+netflix_movies %>%
+  separate_rows(director, sep = ",") %>%
+  filter(director != "NA") %>%
+  count(director) %>% 
+  arrange(desc(n)) %>% 
+  top_n(10) %>% 
+  ggplot(aes(x = reorder(director, n), y = n)) +
+  geom_bar(stat = "identity", fill="dodgerblue2", color="black", alpha=0.4) +
+  theme_linedraw() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(title = "Top 10 Directors with the most movies on Netflix",
+       x = "Director",
+       y = "Number of Movies")
 ```
 *Do you see any issues with this plot? How could we improve the prompt to get a better boxplot? Try writing a prompt.*
 
@@ -115,23 +146,73 @@ Make a bar plot of the top directors with the most movies on netflix
 
 
 
-[Insert your prompt here]
+Make a bar plot of the top directors with the most movies on netflix in 2020
 ```{r}
-
+#Make a bar plot of the top directors with the most movies on netflix in 2020
+netflix_movies %>%
+  separate_rows(director, sep = ",") %>%
+  filter(director != "NA") %>%
+  filter(release_year == 2020) %>%
+  count(director) %>% 
+  arrange(desc(n)) %>% 
+  top_n(10) %>% 
+  ggplot(aes(x = reorder(director, n), y = n)) +
+  geom_bar(stat = "identity", fill="dodgerblue2", color="black", alpha=0.4) +
+  theme_linedraw() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(title = "Top 10 Directors with the most movies on Netflix in 2020",
+       x = "Director",
+       y = "Number of Movies")
 ```
 
 
 *Take a few minutes to make your own plot(s) using prompts, edit prompts until you get a plot that you like.*
 
 
-
-
-
-
 ## Lets make the top 10 directors barplot into a Shiny App: use copilot or Chatgpt
 
+```{r}
+#Make the top 10 directors barplot into a Shiny App
+
+ui <- fluidPage(
+  titlePanel("Top 10 Directors with the most movies on Netflix"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("year", "Year", min = 2010, max = 2020, value = 2020)
+    ),
+    mainPanel(
+      plotOutput("top_directors")
+    )
+  )
+)
+
+
+
+server <- function(input, output) {
+  output$top_directors <- renderPlot({
+    netflix_movies %>%
+      separate_rows(director, sep = ",") %>%
+      filter(director != "NA") %>%
+      filter(release_year == input$year) %>%
+      count(director) %>% 
+      arrange(desc(n)) %>% 
+      top_n(10) %>% 
+      ggplot(aes(x = reorder(director, n), y = n)) +
+      geom_bar(stat = "identity", fill="dodgerblue2", color="black", alpha=0.4) +
+      theme_linedraw() +
+      theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+      labs(title = "Top 10 Directors with the most movies on Netflix",
+           x = "Director",
+           y = "Number of Movies")
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+```
 
 *Now use ChatGPT, Copilot or previous notes to fix the code*
+
 
 
 
